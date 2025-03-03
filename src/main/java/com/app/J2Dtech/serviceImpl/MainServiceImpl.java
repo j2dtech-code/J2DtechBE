@@ -26,6 +26,10 @@ public class MainServiceImpl implements MainService {
 
 	@Override
 	public ApiResponse sendEmail(String to) throws MailException, MessagingException {
+		UserRegistration userDataByEmail = userRegistrationRepo.getUserDataByEmail(to);
+		if(userDataByEmail==null) {
+			return new ApiResponse(500, String.valueOf(000));
+		}
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
 
@@ -33,14 +37,14 @@ public class MainServiceImpl implements MainService {
 		messageHelper.setTo(to);
 		messageHelper.setSubject("Password Reset Request");
 		int otp = generateOtp();
-		messageHelper.setText(getBody("", generateOtp()), true); // 'true' enables HTML content in the body
+		messageHelper.setText(getBody(userDataByEmail.getName(), otp), true); // 'true' enables HTML content in the body
 
 		javaMailSender.send(mimeMessage);
 		return new ApiResponse(200, String.valueOf(otp));
 	}
 
 	private int generateOtp() {
-		int randomNumber = 1000 + (int) (Math.random() * 9000);
+		int randomNumber = 100000 + (int) (Math.random() * 9000);
 		return randomNumber;
 	}
 
@@ -58,7 +62,12 @@ public class MainServiceImpl implements MainService {
 	public ApiResponse registerUser(UserRegistration userRegistration) {
 		// TODO Auto-generated method stub
 		try {
+			UserRegistration userDataByEmail = userRegistrationRepo.getUserDataByEmail(userRegistration.getEmail());
+			if(userDataByEmail==null) {
 			userRegistrationRepo.save(userRegistration);
+			} else {
+				return new ApiResponse(501, "User Already Exists");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,6 +86,16 @@ public class MainServiceImpl implements MainService {
 		}
 		return null;
 		
+	}
+
+	@Override
+	public ApiResponse updatePassword(String email, String password) {
+		try {
+			userRegistrationRepo.updatePassword(email, password);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		 return new ApiResponse(200, "Password Updated Successfully");
 	}
 
 }

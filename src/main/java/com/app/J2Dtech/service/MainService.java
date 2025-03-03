@@ -15,4 +15,6 @@ public interface MainService {
 
 	ApiResponse login(String email, String password);
 
+	ApiResponse updatePassword(String email, String password);
+
 }

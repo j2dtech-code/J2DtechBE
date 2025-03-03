@@ -3,6 +3,7 @@ package com.app.J2Dtech.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,5 +47,14 @@ public class MainController {
 		return ResponseEntity.ok(res);
 
 	}
+	
+	@GetMapping("/updatePassword")
+	public ResponseEntity<ApiResponse>  updatePassword(@RequestParam String email, @RequestParam String password) {
+		ApiResponse res=mainService.updatePassword(email, password);
+		return ResponseEntity.ok(res);
+
+	}
+	
+	
 
 }
