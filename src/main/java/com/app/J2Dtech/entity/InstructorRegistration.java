@@ -8,13 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "User_Registration")
-public class UserRegistration {
+@Table(name = "Instructor_Registration")
+public class InstructorRegistration {
 
 	@Id
 	@Column(name = "User_Registration_ID")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long userRegistrationID;
+	private Long instructorRegistrationID;
 
 	@Column(name = "Name")
 	private String name;
@@ -22,21 +22,18 @@ public class UserRegistration {
 	@Column(name = "Email")
 	private String email;
 
-	@Column(name = "Password")
-	private String password;
+	@Column(name = "Course")
+	private String course;
 
 	@Column(name = "Phone_Number")
 	private String phoneNumber;
-	
-	@Column(name = "Enroll")
-	private boolean enroll;
 
-	public Long getUserRegistrationID() {
-		return userRegistrationID;
+	public Long getInstructorRegistrationID() {
+		return instructorRegistrationID;
 	}
 
-	public void setUserRegistrationID(Long userRegistrationID) {
-		this.userRegistrationID = userRegistrationID;
+	public void setInstructorRegistrationID(Long instructorRegistrationID) {
+		this.instructorRegistrationID = instructorRegistrationID;
 	}
 
 	public String getName() {
@@ -55,12 +52,12 @@ public class UserRegistration {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getCourse() {
+		return course;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setCourse(String course) {
+		this.course = course;
 	}
 
 	public String getPhoneNumber() {
@@ -70,15 +67,5 @@ public class UserRegistration {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-
-	public boolean isEnroll() {
-		return enroll;
-	}
-
-	public void setEnroll(boolean enroll) {
-		this.enroll = enroll;
-	}
-	
-	
 
 }

@@ -21,4 +21,7 @@ public interface UserRegistrationRepo extends JpaRepository<UserRegistration, Lo
 	@Transactional
 	@Query(value = "update User_Registration set password = :password where email = :email", nativeQuery = true)
 	void updatePassword(@Param("email") String email,@Param("password") String password);
+	
+	@Query(value = "select * from User_Registration where Phone_Number = :number", nativeQuery = true)
+	UserRegistration getUserDataByNumber(@Param("number") String number);
 }

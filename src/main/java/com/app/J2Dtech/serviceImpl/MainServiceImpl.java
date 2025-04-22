@@ -1,14 +1,15 @@
 package com.app.J2Dtech.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.app.J2Dtech.entity.ApiResponse;
+import com.app.J2Dtech.entity.InstructorRegistration;
 import com.app.J2Dtech.entity.UserRegistration;
+import com.app.J2Dtech.repository.InstructorRegistrationRepo;
 import com.app.J2Dtech.repository.UserRegistrationRepo;
 import com.app.J2Dtech.service.MainService;
 
@@ -20,6 +21,9 @@ public class MainServiceImpl implements MainService {
 
 	@Autowired
 	private UserRegistrationRepo userRegistrationRepo;
+	
+	@Autowired
+	private InstructorRegistrationRepo instructorRegistrationRepo;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -62,7 +66,7 @@ public class MainServiceImpl implements MainService {
 	public ApiResponse registerUser(UserRegistration userRegistration) {
 		// TODO Auto-generated method stub
 		try {
-			UserRegistration userDataByEmail = userRegistrationRepo.getUserDataByEmail(userRegistration.getEmail());
+			UserRegistration userDataByEmail = userRegistrationRepo.getUserDataByNumber(userRegistration.getPhoneNumber());
 			if(userDataByEmail==null) {
 			userRegistrationRepo.save(userRegistration);
 			} else {
@@ -93,9 +97,41 @@ public class MainServiceImpl implements MainService {
 		try {
 			userRegistrationRepo.updatePassword(email, password);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		 return new ApiResponse(200, "Password Updated Successfully");
+	}
+
+	@Override
+	public ApiResponse enroll(String name, String phoneNumber) {
+		try {
+			UserRegistration userDataByNumber = userRegistrationRepo.getUserDataByNumber(phoneNumber);
+			if(userDataByNumber != null) {
+				userDataByNumber.setEnroll(true);
+				userRegistrationRepo.save(userDataByNumber);
+			} else {
+				UserRegistration user =new UserRegistration();
+				user.setName(name);
+				user.setPhoneNumber(phoneNumber);
+				user.setEnroll(true);
+				userRegistrationRepo.save(user);
+			}
+		} catch (Exception e) {
+            e.printStackTrace();
+		}
+		
+		return new ApiResponse(200, "User Enrolled Successfully");
+	}
+
+	@Override
+	public ApiResponse registerInstructor(InstructorRegistration data) {
+		try {
+			instructorRegistrationRepo.save(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ApiResponse(200, "Instructor Registered Successfully");
 	}
 
 }
